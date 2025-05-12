@@ -1,10 +1,8 @@
-Dưới đây là phiên bản viết lại cho **lưu loát, mạch lạc và trình bày chuyên nghiệp hơn**, phù hợp để đặt ở README:
-
 ---
 
 # 🌟 OAI HUTECH 2025 – Mushroom Image Classification Challenge
 
-Đây là repository chứa **source code giải pháp** cho cuộc thi **Mushroom Image Classification** do **Hội Tin học TP.HCM (HCA)** phối hợp với **Trường Đại học HUTECH** tổ chức.
+Đây là repository chứa **source code** cho cuộc thi **Mushroom Image Classification** do **Hội Tin học TP.HCM (HCA)** phối hợp với **Trường Đại học HUTECH** tổ chức.
 
 ---
 
