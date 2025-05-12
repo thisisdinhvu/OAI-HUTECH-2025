@@ -1,22 +1,20 @@
----
+#  OAI HUTECH 2025 – Mushroom Image Classification Challenge
 
-# 🌟 OAI HUTECH 2025 – Mushroom Image Classification Challenge
-
-Đây là repository chứa **source code** cho cuộc thi **Mushroom Image Classification** do **Hội Tin học TP.HCM (HCA)** phối hợp với **Trường Đại học HUTECH** tổ chức.
+This repository contains the **final solutions** submitted for the **Mushroom Image Classification Challenge** organized by the **Ho Chi Minh City Computer Association (HCA)** in collaboration with **HUTECH University**.
 
 ---
 
-## 🚀 Vòng Bán Kết (Semi-Final Solution)
+##  Semi-Final Solution
 
-### 🧪 Data Preprocessing & Augmentation
+###  Data Preprocessing & Augmentation
 
-Qua quá trình quan sát dữ liệu ban đầu, nhóm nhận thấy rằng việc sử dụng trực tiếp ảnh gốc kích thước **32×32** không đem lại kết quả tối ưu trên các kiến trúc CNN. Vì vậy, chúng em áp dụng **Image Super-Resolution (ISR)** để tăng kích thước ảnh lên **64×64**, giúp mô hình học tốt hơn các đặc trưng.
+After analyzing the original dataset, we realized that using the raw **32×32** resolution images directly in CNN architectures resulted in suboptimal performance. To address this, we applied **Image Super-Resolution (ISR)** to upscale images to **64×64**, allowing the models to learn richer features.
 
 <div align="center">
     <img src="https://github.com/thisisdinhvu/OAI-HUTECH-2025/blob/main/src/semi-final/ISR.png" alt="ISR Image" width="700"/>
 </div> 
 
-Bên cạnh đó, nhóm nhận thấy **class 2** bị ảnh hưởng bởi **background sặc sỡ**, làm giảm độ chính xác. Để khắc phục, với mỗi ảnh màu, chúng em tạo thêm một phiên bản **ảnh xám**, nhằm giúp mô hình tập trung vào hình dạng, đường nét nấm, giảm sự phụ thuộc vào màu nền — nhưng vẫn giữ lại ảnh màu để học thêm đặc trưng màu sắc.
+Additionally, we discovered that **Class 2** was particularly affected by **distracting colorful backgrounds**, leading to misclassifications. To mitigate this, we augmented the dataset by converting each RGB image into an additional **grayscale version**. This technique helped the model focus on **shape and texture features**, while still preserving the ability to learn color-related cues from the original RGB images.
 
 <div align="center">
   <img src="https://github.com/thisisdinhvu/OAI-HUTECH-2025/blob/main/src/semi-final/COLOR-XAM.png" alt="Color vs Gray Image" width="700"/>
@@ -24,11 +22,11 @@ Bên cạnh đó, nhóm nhận thấy **class 2** bị ảnh hưởng bởi **ba
 
 ---
 
-### 🧠 Training & Evaluation
+###  Model Training & Evaluation
 
-Nhóm lựa chọn mô hình **EfficientNetV2S** do nhẹ, phù hợp với tập dữ liệu nhỏ (chỉ 1400 ảnh huấn luyện từ BTC) và vẫn đạt hiệu suất tốt. Sau khi huấn luyện, kết quả đạt **91% accuracy** trên tập public test — xếp hạng **12** toàn quốc và được mời vào vòng chung kết.
+We selected **EfficientNetV2S** for training due to its lightweight architecture — making it well-suited for the relatively small dataset (1,400 training images). Despite its compact size, it delivered strong performance, achieving **91% accuracy** on the public test set, placing our team **12th nationwide**, and earning us a place in the final round.
 
-Mô hình đã cải thiện đáng kể hiệu suất phân loại **class 2**, từ **90/150** lên **124/150** mẫu chính xác.
+We also significantly improved the classification performance for **Class 2**, increasing accuracy from **90/150** to **124/150** samples.
 
 <div align="center">
   <img src="https://github.com/thisisdinhvu/OAI-HUTECH-2025/blob/main/src/semi-final/EVAL.jpg" alt="Confusion Matrix" width="700"/>
@@ -36,29 +34,29 @@ Mô hình đã cải thiện đáng kể hiệu suất phân loại **class 2**,
 
 ---
 
-## 🏆 Vòng Chung Kết (Final Solution)
+##  Final Round Solution
 
-### 📊 Data Preprocessing & Augmentation
+###  Data Preprocessing & Augmentation
 
-Từ kinh nghiệm vòng trước, nhóm quyết định resize ảnh lên kích thước **96×96** (hoạt động tốt hơn với CNN), sử dụng **BICUBIC interpolation**. Ngoài ra, áp dụng thêm các kỹ thuật augmentation nâng cao như:
+Building on insights from the semi-final, we resized all images to **96×96** using **BICUBIC interpolation**, as this size provided better results with deep CNNs. We further applied a series of advanced data augmentation techniques to improve model robustness:
 
 * `RandomResizedCrop`
 * `RandomHorizontalFlip`
 * `RandomRotation`
 * `ColorJitter`
 * `RandomPerspective`
-* `Normalize` (trên 3 kênh RGB)
+* `Normalization` (across RGB channels)
 
 ---
 
-### 🧠 Training & Ensemble
+###  Model Training & Ensemble
 
-Tại vòng chung kết, nhóm áp dụng kỹ thuật **ensemble** hai mô hình mạnh:
+For the final round, we implemented a **feature-level ensemble** using two powerful CNN architectures:
 
 * `EfficientNetV2-L`
 * `ConvNeXt-Large`
 
-Hai mô hình này được dùng để **trích xuất đặc trưng**, sau đó **nối đặc trưng (concat)** lại. Thay vì dùng một lớp linear đơn giản để dự đoán, chúng em áp dụng **KAN (Kolmogorov–Arnold Networks)** để tổng hợp đặc trưng và đưa ra dự đoán chính xác hơn.
+Both models were used as **feature extractors**, and their outputs were **concatenated**. Instead of using a standard linear layer for classification, we employed **KAN (Kolmogorov–Arnold Networks)** to fuse the extracted features and enhance prediction accuracy.
 
 <div align="center">
   <img src="https://github.com/thisisdinhvu/OAI-HUTECH-2025/blob/main/src/final/effv2l_convL_kan_ensemble.png" alt="Model Architecture" width="700"/>
@@ -66,13 +64,14 @@ Hai mô hình này được dùng để **trích xuất đặc trưng**, sau đ�
 
 ---
 
-### 📈 Kết quả
+###  Final Results
 
-Mô hình đạt được **98% accuracy** và xếp **hạng 9 toàn giải** trong vòng chung kết cuộc thi.
+Our final ensemble model achieved an impressive **98% accuracy**, placing us **9th overall** in the national final leaderboard.
 
 <div align="center">
   <img src="https://github.com/thisisdinhvu/OAI-HUTECH-2025/blob/main/src/final/ranking.png" alt="Leaderboard" width="700"/>
 </div> 
 
 ---
+
 
